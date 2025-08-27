@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import purureum.pudongpudong.domain.model.Park;
-import purureum.pudongpudong.domain.model.enums.ParkDifficulty;
 import purureum.pudongpudong.infrastructure.dto.api.KakaoNaviApiResponseDto;
 
 @Builder
@@ -15,9 +14,6 @@ import purureum.pudongpudong.infrastructure.dto.api.KakaoNaviApiResponseDto;
 public class ParkResponseDto {
 	String id;
 	String name;
-	String description;
-	ParkDifficulty difficulty;
-	Boolean isVisited;
 	Double longitude;
 	Double latitude;
 	Integer distance;
@@ -27,9 +23,6 @@ public class ParkResponseDto {
 		return ParkResponseDto.builder()
 				.id(park.getId())
 				.name(park.getPlaceName())
-				.description(park.getDescription())
-				.difficulty(park.getDifficulty())
-				.isVisited(false)
 				.longitude(park.getLongitude())
 				.latitude(park.getLatitude())
 				.distance(response.getSummary().getDistance())

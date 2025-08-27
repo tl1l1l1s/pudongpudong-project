@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import purureum.pudongpudong.domain.model.Park;
-import purureum.pudongpudong.domain.model.enums.ParkDifficulty;
 
 @Getter
 @Setter
@@ -40,8 +39,6 @@ public class ParkDto {
 				.roadAddressName(this.getRoadAddressName())
 				.latitude(Double.parseDouble(this.getLatitude()))
 				.longitude(Double.parseDouble(this.getLongitude()))
-				.description("설명 정보가 없습니다.")
-				.difficulty(ParkDifficulty.NORMAL)
 				.build();
 	}
 }
