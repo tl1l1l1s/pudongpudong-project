@@ -17,7 +17,7 @@ public class ParkDto {
 	private String id;
 	
 	@JsonProperty("place_name")
-	private String placeName;
+	private String parkName;
 	
 	@JsonProperty("address_name")
 	private String addressName;
@@ -34,7 +34,7 @@ public class ParkDto {
 	public Parks toEntity() {
 		return Parks.builder()
 				.id(this.getId())
-				.placeName(this.getPlaceName())
+				.placeName(this.getParkName())
 				.addressName(this.getAddressName())
 				.roadAddressName(this.getRoadAddressName())
 				.latitude(Double.parseDouble(this.getLatitude()))

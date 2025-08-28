@@ -9,10 +9,10 @@ public class MathUtil {
 	}
 	
 	public static double calculatePace(Integer duration, Double distance) {
-		if (distance == null || distance <= 0 || duration == null) {
+		if (distance == null || distance <= 0 || duration == null || duration <= 0) {
 			return 0.0;
 		}
-		return roundToTwoDecimalPlaces(duration / distance);
+		return roundToTwoDecimalPlaces((double) duration / distance);
 	}
 	
 	public static double calculateCompletionPercentage(int collected, int total) {

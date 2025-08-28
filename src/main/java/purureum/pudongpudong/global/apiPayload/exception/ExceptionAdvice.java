@@ -2,7 +2,7 @@ package purureum.pudongpudong.global.apiPayload.exception;
 
 import jakarta.validation.ConstraintViolation;
 import purureum.pudongpudong.global.apiPayload.ApiResponse;
-import purureum.pudongpudong.global.apiPayload.code.ErrorReasonDTO;
+import purureum.pudongpudong.global.apiPayload.code.ErrorReasonDto;
 import purureum.pudongpudong.global.apiPayload.code.status.ErrorStatus;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
@@ -60,7 +60,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = GeneralException.class)
     public ResponseEntity<Object> onThrowException(GeneralException generalException, HttpServletRequest request) {
-        ErrorReasonDTO errorReasonHttpStatus = generalException.getErrorReasonHttpStatus();
+        ErrorReasonDto errorReasonHttpStatus = generalException.getErrorReasonHttpStatus();
         return handleExceptionInternal(generalException,errorReasonHttpStatus, request);
     }
     
@@ -78,7 +78,7 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         );
     }
 
-    private ResponseEntity<Object> handleExceptionInternal(Exception e, ErrorReasonDTO reason,
+    private ResponseEntity<Object> handleExceptionInternal(Exception e, ErrorReasonDto reason,
                                                            HttpServletRequest request) {
 
         ApiResponse<Object> body = ApiResponse.onFailure(reason.getCode(),reason.getMessage(),null);

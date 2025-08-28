@@ -13,7 +13,7 @@ import purureum.pudongpudong.infrastructure.dto.api.KakaoNaviApiResponseDto;
 @AllArgsConstructor
 public class ParkResponseDto {
 	String id;
-	String name;
+	String parkName;
 	Double longitude;
 	Double latitude;
 	Integer distance;
@@ -22,7 +22,7 @@ public class ParkResponseDto {
 	public static ParkResponseDto toDto(Parks park, KakaoNaviApiResponseDto.Route response) {
 		return ParkResponseDto.builder()
 				.id(park.getId())
-				.name(park.getPlaceName())
+				.parkName(park.getPlaceName())
 				.longitude(park.getLongitude())
 				.latitude(park.getLatitude())
 				.distance(response.getSummary().getDistance())

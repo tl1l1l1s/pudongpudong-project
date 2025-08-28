@@ -1,7 +1,7 @@
 package purureum.pudongpudong.global.apiPayload.code.status;
 
 import purureum.pudongpudong.global.apiPayload.code.BaseErrorCode;
-import purureum.pudongpudong.global.apiPayload.code.ErrorReasonDTO;
+import purureum.pudongpudong.global.apiPayload.code.ErrorReasonDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -34,8 +34,8 @@ public enum ErrorStatus implements BaseErrorCode {
     private final String message;
 
     @Override
-    public ErrorReasonDTO getReason() {
-        return ErrorReasonDTO.builder()
+    public ErrorReasonDto getReason() {
+        return ErrorReasonDto.builder()
                 .message(message)
                 .code(code)
                 .isSuccess(false)
@@ -43,8 +43,8 @@ public enum ErrorStatus implements BaseErrorCode {
     }
 
     @Override
-    public ErrorReasonDTO getReasonHttpStatus() {
-        return ErrorReasonDTO.builder()
+    public ErrorReasonDto getReasonHttpStatus() {
+        return ErrorReasonDto.builder()
                 .message(message)
                 .code(code)
                 .isSuccess(false)

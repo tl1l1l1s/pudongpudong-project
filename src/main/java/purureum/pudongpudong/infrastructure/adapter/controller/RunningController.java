@@ -42,13 +42,6 @@ public class RunningController {
 	public ApiResponse<SessionCompleteResponseDto> completeSession(
 			@Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader,
 			@Valid @RequestBody SessionCompleteRequestDto request) {
-		
-		Long userId = authUtil.extractUserIdFromHeader(authorizationHeader);
-		
-		log.info("러닝 완료 요청: userId={}, duration={}, distance={}, parkName={}", 
-				userId, request.getDuration(), request.getDistance(), request.getParkName());
-		
-		SessionCompleteResponseDto response = runningService.completeSession(userId, request);
-		return ApiResponse.onSuccess(response);
+		return ApiResponse.onSuccess(runningService.completeSession(authUtil.extractUserIdFromHeader(authorizationHeader), request));
 	}
 }

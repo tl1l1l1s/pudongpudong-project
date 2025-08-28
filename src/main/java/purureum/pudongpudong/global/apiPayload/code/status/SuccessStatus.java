@@ -1,7 +1,7 @@
 package purureum.pudongpudong.global.apiPayload.code.status;
 
 import purureum.pudongpudong.global.apiPayload.code.BaseCode;
-import purureum.pudongpudong.global.apiPayload.code.ReasonDTO;
+import purureum.pudongpudong.global.apiPayload.code.ReasonDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
@@ -17,8 +17,8 @@ public enum SuccessStatus implements BaseCode {
     private final String message;
 
     @Override
-    public ReasonDTO getReason() {
-        return ReasonDTO.builder()
+    public ReasonDto getReason() {
+        return ReasonDto.builder()
                 .message(message)
                 .code(code)
                 .isSuccess(true)
@@ -26,8 +26,8 @@ public enum SuccessStatus implements BaseCode {
     }
 
     @Override
-    public ReasonDTO getReasonHttpStatus() {
-        return ReasonDTO.builder()
+    public ReasonDto getReasonHttpStatus() {
+        return ReasonDto.builder()
                 .message(message)
                 .code(code)
                 .isSuccess(true)

@@ -1,7 +1,7 @@
 package purureum.pudongpudong.global.apiPayload.exception;
 
 import purureum.pudongpudong.global.apiPayload.code.BaseErrorCode;
-import purureum.pudongpudong.global.apiPayload.code.ErrorReasonDTO;
+import purureum.pudongpudong.global.apiPayload.code.ErrorReasonDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -11,11 +11,11 @@ public class GeneralException extends RuntimeException {
 
     private BaseErrorCode code;
 
-    public ErrorReasonDTO getErrorReason() {
+    public ErrorReasonDto getErrorReason() {
         return this.code.getReason();
     }
 
-    public ErrorReasonDTO getErrorReasonHttpStatus(){
+    public ErrorReasonDto getErrorReasonHttpStatus(){
         return this.code.getReasonHttpStatus();
     }
 

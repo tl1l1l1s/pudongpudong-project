@@ -11,6 +11,9 @@ import purureum.pudongpudong.domain.model.enums.Mood;
 @NoArgsConstructor
 public class SessionCompleteRequestDto {
 	
+	@NotBlank
+	private String parkName;
+	
 	@NotNull
 	@Positive
 	private Integer duration;
@@ -22,9 +25,6 @@ public class SessionCompleteRequestDto {
 	@NotNull
 	@Positive
 	private Double calories;
-	
-	@NotBlank
-	private String parkName;
 	
 	@NotNull
 	private Mood mood;
