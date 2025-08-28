@@ -11,5 +11,5 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class ParkSpeciesId implements Serializable {
 	private String parkId;
-	private String speciesId;
+	private Long speciesId;
 }

@@ -13,11 +13,11 @@ public class SessionCompleteRequestDto {
 	
 	@NotNull
 	@Positive
-	private Integer duration; // 분 단위
+	private Integer duration;
 	
 	@NotNull
 	@Positive
-	private Double distance; // km 단위
+	private Double distance;
 	
 	@NotNull
 	@Positive
@@ -27,5 +27,5 @@ public class SessionCompleteRequestDto {
 	private String parkName;
 	
 	@NotNull
-	private Mood mood; // 러닝 무드
+	private Mood mood;
 }

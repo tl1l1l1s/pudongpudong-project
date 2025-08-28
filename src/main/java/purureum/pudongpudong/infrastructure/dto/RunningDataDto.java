@@ -7,11 +7,11 @@ import lombok.Getter;
 @Builder
 public class RunningDataDto {
 	private Integer date;
-	private Integer duration; // 분
-	private Double distance; // km
-	private Double pace; // 분/km
+	private Integer duration;
+	private Double distance;
+	private Double pace;
 	private Double calories;
 	private String location;
-	private String mood; // 러닝 무드
-	private java.util.List<String> stamps; // 스탬프 목록
+	private String mood;
+	private java.util.List<String> stamps;
 }

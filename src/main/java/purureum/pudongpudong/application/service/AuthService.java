@@ -20,14 +20,12 @@ public class AuthService {
 	
 	@Transactional
 	public AuthResponseDto signUp(AuthRequestDto request) {
-		// 기존 사용자 확인
 		Users user = usersRepository.findByProviderId(request.getProviderId())
 				.orElse(null);
 		
 		boolean isNewUser = false;
 		
 		if (user == null) {
-			// 신규 사용자 생성
 			user = Users.builder()
 					.name(request.getName())
 					.providerId(request.getProviderId())
@@ -40,7 +38,6 @@ public class AuthService {
 			log.info("기존 사용자 로그인: providerId={}, provider={}", request.getProviderId(), request.getProvider());
 		}
 		
-		// JWT 토큰 생성
 		String token = jwtUtil.generateToken(user.getId());
 		
 		return AuthResponseDto.builder()

@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import purureum.pudongpudong.domain.model.*;
 import purureum.pudongpudong.domain.repository.*;
+import purureum.pudongpudong.global.apiPayload.code.status.ErrorStatus;
+import purureum.pudongpudong.global.apiPayload.exception.custom.ParkNotFoundException;
+import purureum.pudongpudong.global.apiPayload.exception.custom.UserNotFoundException;
+import purureum.pudongpudong.global.util.MathUtil;
 import purureum.pudongpudong.infrastructure.dto.*;
 
 import java.time.LocalDateTime;
@@ -22,40 +26,17 @@ public class RunningService {
 	private final ParksRepository parksRepository;
 	private final UserStampsRepository userStampsRepository;
 	private final UserStatisticsRepository userStatisticsRepository;
+	private final Random random;
 	
 	@Transactional(readOnly = true)
 	public RunningResponseDto getRunningCalendar(Long userId, int year, int month) {
-		// 통계 데이터 조회
-		Object[] statisticsData = sessionsRepository.findStatisticsByUserIdAndYearMonth(userId, year, month);
-		RunningStatisticsDto statistics = buildStatistics(statisticsData);
-		
-		// 세션 데이터 조회
+		RunningStatisticsDto statistics = sessionsRepository.findStatisticsByUserIdAndYearMonth(userId, year, month);
 		List<Sessions> sessions = sessionsRepository.findByUserIdAndYearMonth(userId, year, month);
 		List<RunningDataDto> data = buildRunningData(sessions);
 		
 		return RunningResponseDto.builder()
 				.statistics(statistics)
 				.data(data)
-				.build();
-	}
-	
-	private RunningStatisticsDto buildStatistics(Object[] data) {
-		if (data == null || data.length != 3) {
-			return RunningStatisticsDto.builder()
-					.running(0)
-					.distance(0.0)
-					.calories(0.0)
-					.build();
-		}
-		
-		Long runningCount = (Long) data[0];
-		Double totalDistance = (Double) data[1];
-		Double totalCalories = (Double) data[2];
-		
-		return RunningStatisticsDto.builder()
-				.running(runningCount != null ? runningCount.intValue() : 0)
-				.distance(totalDistance != null ? totalDistance : 0.0)
-				.calories(totalCalories != null ? totalCalories : 0.0)
 				.build();
 	}
 	
@@ -75,11 +56,7 @@ public class RunningService {
 			Integer day = entry.getKey();
 			Sessions session = entry.getValue();
 			
-			double pace = 0.0;
-			if (session.getDistance() != null && session.getDistance() > 0 && session.getDuration() != null) {
-				pace = session.getDuration() / session.getDistance();
-				pace = Math.round(pace * 100.0) / 100.0; // 소수점 2자리
-			}
+			double pace = MathUtil.calculatePace(session.getDuration(), session.getDistance());
 			
 			List<UserStamps> stamps = userStampsRepository.findBySessionId(session.getId());
 			List<String> stampNames = stamps.stream()
@@ -105,12 +82,30 @@ public class RunningService {
 	
 	@Transactional
 	public SessionCompleteResponseDto completeSession(Long userId, SessionCompleteRequestDto request) {
-		Users user = usersRepository.findById(userId)
-				.orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
+		Users user = findUserById(userId);
+		Parks park = findParkByName(request.getParkName());
 		
-		Parks park = parksRepository.findByPlaceName(request.getParkName())
-				.orElseThrow(() -> new RuntimeException("공원을 찾을 수 없습니다."));
+		Sessions session = createSession(user, park, request);
+		updateUserStatistics(user, request.getDistance(), request.getCalories());
+		List<String> stampNames = assignRandomStamps(session);
 		
+		double pace = MathUtil.calculatePace(request.getDuration(), request.getDistance());
+		
+		log.info("러닝 세션 완료: userId={}, sessionId={}, stamps={}", userId, session.getId(), stampNames);
+		
+		return SessionCompleteResponseDto.builder()
+				.sessionId(session.getId())
+				.duration(request.getDuration())
+				.distance(request.getDistance())
+				.pace(pace)
+				.calories(request.getCalories())
+				.parkName(request.getParkName())
+				.mood(request.getMood().name().toLowerCase())
+				.stamps(stampNames)
+				.build();
+	}
+	
+	private Sessions createSession(Users user, Parks park, SessionCompleteRequestDto request) {
 		Sessions session = Sessions.builder()
 				.user(user)
 				.park(park)
@@ -119,51 +114,45 @@ public class RunningService {
 				.caloriesBurned(request.getCalories())
 				.mood(request.getMood())
 				.build();
-		
-		session = sessionsRepository.save(session);
-		
-		updateUserStatistics(user, request.getDistance(), request.getCalories());
-		
-		List<String> stampNames = assignRandomStamps(session);
-		
-		double pace = request.getDistance() > 0 ? request.getDuration() / request.getDistance() : 0.0;
-		
-		log.info("러닝 세션 완료: userId={}, sessionId={}, stamps={}", userId, session.getId(), stampNames);
-		
-		return SessionCompleteResponseDto.builder()
-				.sessionId(session.getId())
-				.duration(request.getDuration())
-				.distance(request.getDistance())
-				.pace(Math.round(pace * 100.0) / 100.0) // 소수점 2자리
-				.calories(request.getCalories())
-				.parkName(request.getParkName())
-				.mood(request.getMood().name().toLowerCase())
-				.stamps(stampNames)
-				.build();
+		return sessionsRepository.save(session);
 	}
 	
 	private List<String> assignRandomStamps(Sessions session) {
-		List<Species> availableSpecies = userStampsRepository.findRandomSpeciesByParkName(
+		List<Species> availableSpecies = userStampsRepository.findSpeciesByParkName(
 				session.getPark().getPlaceName());
 		
 		if (availableSpecies.isEmpty()) {
 			return new ArrayList<>();
 		}
 		
-		// 진짜 랜덤으로 선택
-		Random random = new Random();
-		Species selectedSpecies = availableSpecies.get(random.nextInt(availableSpecies.size()));
+		Species selectedSpecies = selectRandomSpecies(availableSpecies);
+		createUserStamp(session, selectedSpecies);
 		
+		return List.of(selectedSpecies.getName());
+	}
+	
+	private Users findUserById(Long userId) {
+		return usersRepository.findById(userId)
+				.orElseThrow(() -> new UserNotFoundException(ErrorStatus.USER_NOT_FOUND));
+	}
+	
+	private Parks findParkByName(String parkName) {
+		return parksRepository.findByPlaceName(parkName)
+				.orElseThrow(() -> new ParkNotFoundException(ErrorStatus.PARK_NOT_FOUND));
+	}
+	
+	private Species selectRandomSpecies(List<Species> availableSpecies) {
+		return availableSpecies.get(random.nextInt(availableSpecies.size()));
+	}
+	
+	private void createUserStamp(Sessions session, Species species) {
 		UserStamps userStamp = UserStamps.builder()
 				.user(session.getUser())
 				.session(session)
-				.species(selectedSpecies)
+				.species(species)
 				.collectedAt(LocalDateTime.now())
 				.build();
-		
 		userStampsRepository.save(userStamp);
-		
-		return List.of(selectedSpecies.getName());
 	}
 	
 	private void updateUserStatistics(Users user, Double distance, Double calories) {
@@ -178,7 +167,7 @@ public class RunningService {
 		statistics.addStamp();
 		
 		userStatisticsRepository.save(statistics);
-		log.info("사용자 통계 업데이트 완료: userId={}, totalRuns={}, totalDistance={}",
+		log.info("사용자 통계 업데이트 완료: userId={}, totalRuns={}, totalDistance={}", 
 				user.getId(), statistics.getRunCount(), statistics.getTotalDistance());
 	}
 }
