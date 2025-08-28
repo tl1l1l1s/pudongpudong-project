@@ -33,4 +33,25 @@ public class UserStatistics extends BaseEntity {
 	@OneToOne
 	@JoinColumn(name = "user_id")
 	private Users user;
+	
+	public void updateRunStatistics(Double distance, Double calories) {
+		this.runCount++;
+		this.totalDistance += distance;
+		this.totalCaloriesBurned += calories;
+	}
+	
+	public void addStamp() {
+		this.totalStampsCollected++;
+	}
+	
+	public static UserStatistics createInitial(Users user) {
+		return UserStatistics.builder()
+				.user(user)
+				.runCount(0)
+				.totalDistance(0.0)
+				.totalCaloriesBurned(0.0)
+				.totalTrainersUnlocked(0)
+				.totalStampsCollected(0)
+				.build();
+	}
 }
