@@ -9,7 +9,7 @@ import purureum.pudongpudong.global.common.domain.BaseEntity;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Park extends BaseEntity {
+public class Parks extends BaseEntity {
 	
 	@Id
 	private String id;
@@ -26,4 +26,6 @@ public class Park extends BaseEntity {
 	
 	@Column(columnDefinition = "DECIMAL(10, 7)", nullable = false)
 	private Double latitude;
+	
+	
 }

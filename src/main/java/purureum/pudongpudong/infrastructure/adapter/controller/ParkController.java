@@ -4,10 +4,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import purureum.pudongpudong.application.command.ParkCommandService;
 import purureum.pudongpudong.application.query.ParkQueryService;
 import purureum.pudongpudong.global.apiPayload.ApiResponse;
-import purureum.pudongpudong.infrastructure.dto.ParkDetailResponseDto;
 import purureum.pudongpudong.infrastructure.dto.ParkResponseDto;
 import reactor.core.publisher.Mono;
 
@@ -20,7 +18,6 @@ import java.util.List;
 public class ParkController {
 	
 	private final ParkQueryService parkQueryService;
-	private final ParkCommandService parkCommandService;
 	
 	@Operation(
 			summary = "공원 지도 API",
@@ -30,13 +27,4 @@ public class ParkController {
 															   @RequestParam Double y) {
 		return parkQueryService.getAllParksWithMyLocation(x, y).collectList().map(ApiResponse::onSuccess);
 	}
-	
-	@Operation(
-			summary = "공원 검색 API",
-			description = "키워드로 공원을 검색합니다.")
-	@GetMapping("/search")
-	public ApiResponse<List<ParkDetailResponseDto>> searchParks(@RequestParam String keyword) {
-		return ApiResponse.onSuccess(parkQueryService.searchParksByKeyword(keyword));
-	}
-	
 }
