@@ -32,6 +32,6 @@ public class Sessions extends BaseEntity {
 	private Users user;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "session_id")
+	@JoinColumn(name = "park_id")
 	private Parks park;
 }
