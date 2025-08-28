@@ -21,6 +21,9 @@ public class Users extends BaseEntity {
 	
 	private String name;
 	
+	@Column(nullable = false, unique = true)
+	private String providerId;
+	
 	private ProviderType provider;
 	
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
