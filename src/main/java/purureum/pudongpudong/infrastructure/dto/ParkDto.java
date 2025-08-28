@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import purureum.pudongpudong.domain.model.Park;
-import purureum.pudongpudong.domain.model.enums.ParkDifficulty;
+import purureum.pudongpudong.domain.model.Parks;
 
 @Getter
 @Setter
@@ -32,16 +31,14 @@ public class ParkDto {
 	@JsonProperty("y")
 	private String latitude;
 	
-	public Park toEntity() {
-		return Park.builder()
+	public Parks toEntity() {
+		return Parks.builder()
 				.id(this.getId())
 				.placeName(this.getPlaceName())
 				.addressName(this.getAddressName())
 				.roadAddressName(this.getRoadAddressName())
 				.latitude(Double.parseDouble(this.getLatitude()))
 				.longitude(Double.parseDouble(this.getLongitude()))
-				.description("설명 정보가 없습니다.")
-				.difficulty(ParkDifficulty.NORMAL)
 				.build();
 	}
 }

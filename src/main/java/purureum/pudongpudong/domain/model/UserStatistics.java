@@ -9,19 +9,28 @@ import purureum.pudongpudong.global.common.domain.BaseEntity;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class Fairy extends BaseEntity {
+public class UserStatistics extends BaseEntity {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(nullable = false)
-	private String name;
+	private Integer runCount;
 	
 	@Column(nullable = false)
-	private String description;
+	private Double totalDistance;
 	
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "park_id", nullable = true)
-	private Park park;
+	@Column(nullable = false)
+	private Double totalCaloriesBurned;
+	
+	@Column(nullable = false)
+	private Integer totalTrainersUnlocked;
+	
+	@Column(nullable = false)
+	private Integer totalStampsCollected;
+	
+	@OneToOne
+	@JoinColumn(name = "user_id")
+	private Users user;
 }

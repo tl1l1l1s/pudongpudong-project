@@ -2,6 +2,7 @@ package purureum.pudongpudong.domain.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import purureum.pudongpudong.domain.model.id.ParkSpeciesId;
 import purureum.pudongpudong.global.common.domain.BaseEntity;
 
 @Entity
@@ -9,16 +10,18 @@ import purureum.pudongpudong.global.common.domain.BaseEntity;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class ParkTag extends BaseEntity {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+public class ParkSpecies extends BaseEntity {
+	
+	@EmbeddedId
+	private ParkSpeciesId id;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "park_id", nullable = false)
-	private Park park;
+	@MapsId("parkId")
+	@JoinColumn(name = "park_id")
+	private Parks park;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "tag_id", nullable = false)
-	private Tag tag;
+	@MapsId("speciesId")
+	@JoinColumn(name = "species_id")
+	private Species species;
 }
