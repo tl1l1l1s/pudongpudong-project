@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import purureum.pudongpudong.domain.model.Park;
+import purureum.pudongpudong.domain.model.Parks;
 import purureum.pudongpudong.infrastructure.dto.api.KakaoNaviApiResponseDto;
 
 @Builder
@@ -19,7 +19,7 @@ public class ParkResponseDto {
 	Integer distance;
 	Integer time;
 	
-	public static ParkResponseDto toDto(Park park, KakaoNaviApiResponseDto.Route response) {
+	public static ParkResponseDto toDto(Parks park, KakaoNaviApiResponseDto.Route response) {
 		return ParkResponseDto.builder()
 				.id(park.getId())
 				.name(park.getPlaceName())
