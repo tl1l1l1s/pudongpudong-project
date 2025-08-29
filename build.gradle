@@ -71,3 +71,7 @@ tasks.withType(JavaCompile).configureEach {
 clean {
 	delete file(generated)
 }
+
+bootJar {
+    archiveFileName = "${project.name}.jar"
+}

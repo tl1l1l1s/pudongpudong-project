@@ -6,7 +6,7 @@ on:
 
 env:
   PROJECT_NAME: 'pudongpudong-backend'
-  JAR_FILE_NAME: 'pudongpudong-backend-0.0.1-SNAPSHOT.jar'
+  JAR_FILE_NAME: 'pudongpudong-backend.jar'
 
 jobs:
   build:
