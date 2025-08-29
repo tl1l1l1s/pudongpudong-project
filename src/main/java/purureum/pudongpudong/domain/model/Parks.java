@@ -27,5 +27,7 @@ public class Parks extends BaseEntity {
 	@Column(columnDefinition = "DECIMAL(10, 7)", nullable = false)
 	private Double latitude;
 	
-	
+	@Builder.Default
+	@Column(length = 20)
+	private String emoji  = "🌱";
 }

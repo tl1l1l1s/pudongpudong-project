@@ -18,6 +18,8 @@ public class Species extends BaseEntity {
 	@Column(nullable = false, length = 100)
 	private String name;
 	
-	@Column(nullable = false, length = 20)
-	private String season;
+	@Builder.Default
+	@Column(length = 20)
+	private String emoji  = "🌱";
+	
 }
