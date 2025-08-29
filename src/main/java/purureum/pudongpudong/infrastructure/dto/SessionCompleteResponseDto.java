@@ -9,11 +9,11 @@ import java.util.List;
 @Builder
 public class SessionCompleteResponseDto {
 	private Long sessionId;
+	private String parkName;
 	private Integer duration;
 	private Double distance;
 	private Double pace;
 	private Double calories;
-	private String parkName;
 	private String mood;
 	private List<String> stamps;
 }

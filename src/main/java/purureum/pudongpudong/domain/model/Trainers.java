@@ -20,5 +20,9 @@ public class Trainers extends BaseEntity {
 	
 	@Column(columnDefinition = "TEXT")
 	private String description;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "park_id")
+	private Parks park;
 }
 

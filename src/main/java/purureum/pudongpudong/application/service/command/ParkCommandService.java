@@ -1,4 +1,4 @@
-package purureum.pudongpudong.application.command;
+package purureum.pudongpudong.application.service.command;
 
 import purureum.pudongpudong.domain.model.Parks;
 import reactor.core.publisher.Flux;

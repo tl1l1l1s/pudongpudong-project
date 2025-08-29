@@ -12,4 +12,6 @@ public interface UserStampsRepositoryCustom {
 	Integer countDistinctSpeciesByUserId(Long userId);
 	Map<String, Integer> countSpeciesByUserIdAndPark(Long userId);
 	Integer countTotalSpecies();
+	List<Species> findCollectedSpeciesByUserIdAndParkName(Long userId, String parkName);
+	List<Species> findCollectedSpeciesByUserIdAndParkId(Long userId, String parkId);
 }

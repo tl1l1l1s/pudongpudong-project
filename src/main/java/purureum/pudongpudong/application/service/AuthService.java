@@ -9,6 +9,8 @@ import purureum.pudongpudong.domain.repository.UsersRepository;
 import purureum.pudongpudong.global.util.JwtUtil;
 import purureum.pudongpudong.infrastructure.dto.AuthRequestDto;
 import purureum.pudongpudong.infrastructure.dto.AuthResponseDto;
+import purureum.pudongpudong.global.apiPayload.code.status.ErrorStatus;
+import purureum.pudongpudong.global.apiPayload.exception.handler.ApiHandler;
 
 @Slf4j
 @Service
@@ -20,6 +22,16 @@ public class AuthService {
 	
 	@Transactional
 	public AuthResponseDto signUp(AuthRequestDto request) {
+		if (request.getProviderId() == null || request.getProviderId().trim().isEmpty()) {
+			throw new ApiHandler(ErrorStatus.INVALID_AUTH_DATA);
+		}
+		if (request.getName() == null || request.getName().trim().isEmpty()) {
+			throw new ApiHandler(ErrorStatus.INVALID_AUTH_DATA);
+		}
+		if (request.getProvider() == null) {
+			throw new ApiHandler(ErrorStatus.INVALID_AUTH_DATA);
+		}
+		
 		Users user = usersRepository.findByProviderId(request.getProviderId())
 				.orElse(null);
 		
@@ -38,7 +50,7 @@ public class AuthService {
 			log.info("기존 사용자 로그인: providerId={}, provider={}", request.getProviderId(), request.getProvider());
 		}
 		
-		String token = jwtUtil.generateToken(user.getId());
+		String token = generateJwtToken(user.getId());
 		
 		return AuthResponseDto.builder()
 				.userId(user.getId())
@@ -48,5 +60,14 @@ public class AuthService {
 				.token(token)
 				.isNewUser(isNewUser)
 				.build();
+	}
+	
+	private String generateJwtToken(Long userId) {
+		try {
+			return jwtUtil.generateToken(userId);
+		} catch (Exception e) {
+			log.error("JWT 토큰 생성 실패: userId={}", userId, e);
+			throw new ApiHandler(ErrorStatus.TOKEN_GENERATION_FAILED);
+		}
 	}
 }

@@ -78,4 +78,29 @@ public class UserStampsRepositoryImpl implements UserStampsRepositoryCustom {
 				.fetchOne();
 		return count != null ? count.intValue() : 0;
 	}
+	
+	@Override
+	public List<Species> findCollectedSpeciesByUserIdAndParkName(Long userId, String parkName) {
+		return queryFactory
+				.select(species).distinct()
+				.from(userStamps)
+				.join(userStamps.species, species)
+				.join(userStamps.session, sessions)
+				.join(sessions.park, parks)
+				.where(userStamps.user.id.eq(userId)
+						.and(parks.placeName.eq(parkName)))
+				.fetch();
+	}
+	
+	@Override
+	public List<Species> findCollectedSpeciesByUserIdAndParkId(Long userId, String parkId) {
+		return queryFactory
+				.select(species).distinct()
+				.from(userStamps)
+				.join(userStamps.species, species)
+				.join(userStamps.session, sessions)
+				.where(userStamps.user.id.eq(userId)
+						.and(sessions.park.id.eq(parkId)))
+				.fetch();
+	}
 }

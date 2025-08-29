@@ -5,9 +5,11 @@ import lombok.RequiredArgsConstructor;
 import purureum.pudongpudong.domain.model.UserTrainers;
 
 import java.util.List;
+import java.util.Optional;
 
 import static purureum.pudongpudong.domain.model.QUserTrainers.userTrainers;
 import static purureum.pudongpudong.domain.model.QTrainers.trainers;
+import static purureum.pudongpudong.domain.model.QParks.parks;
 
 @RequiredArgsConstructor
 public class UserTrainersRepositoryImpl implements UserTrainersRepositoryCustom {
@@ -19,7 +21,8 @@ public class UserTrainersRepositoryImpl implements UserTrainersRepositoryCustom 
 		return queryFactory
 				.selectFrom(userTrainers)
 				.join(userTrainers.trainer, trainers).fetchJoin()
-				.where(userTrainers.user.id.eq(userId))
+				.join(trainers.park, parks).fetchJoin()
+				.where(userTrainers.id.userId.eq(userId))
 				.fetch();
 	}
 	
@@ -28,8 +31,20 @@ public class UserTrainersRepositoryImpl implements UserTrainersRepositoryCustom 
 		Long count = queryFactory
 				.select(userTrainers.count())
 				.from(userTrainers)
-				.where(userTrainers.user.id.eq(userId))
+				.where(userTrainers.id.userId.eq(userId))
 				.fetchOne();
 		return count != null ? count.intValue() : 0;
+	}
+	
+	@Override
+	public Optional<UserTrainers> findByUserIdAndTrainerId(Long userId, Long trainerId) {
+		UserTrainers result = queryFactory
+				.selectFrom(userTrainers)
+				.join(userTrainers.trainer, trainers).fetchJoin()
+				.leftJoin(trainers.park, parks).fetchJoin()  // leftJoin으로 변경
+				.where(userTrainers.id.userId.eq(userId)
+						.and(userTrainers.id.trainerId.eq(trainerId)))
+				.fetchOne();
+		return Optional.ofNullable(result);
 	}
 }
