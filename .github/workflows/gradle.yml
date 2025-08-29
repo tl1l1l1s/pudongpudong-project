@@ -22,6 +22,7 @@ jobs:
 
       - name: Create application.properties file from secret
         run: |
+          mkdir -p src/main/resources/
           cat > src/main/resources/application.properties << EOF
           ${{ secrets.APPLICATION_PROPERTIES }}
           EOF
