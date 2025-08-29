@@ -14,9 +14,6 @@ import java.util.List;
 public class TrainerDetailResponseDto {
 	private String trainerName;
 	private String description;
-	private Integer level;
-	private Integer experience;
-	private Integer toNextLevel;
 	private String comment;
 	private List<TrainerStampDto> stamps;
 	private Integer collectedStamps;

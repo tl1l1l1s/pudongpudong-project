@@ -24,10 +24,4 @@ public class UserTrainers extends BaseEntity {
 	@MapsId("trainerId")
 	@JoinColumn(name = "trainer_id")
 	private Trainers trainer;
-	
-	@Column(nullable = false)
-	private Integer level;
-	
-	@Column(nullable = false)
-	private Integer experience;
 }

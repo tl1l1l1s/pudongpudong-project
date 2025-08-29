@@ -8,8 +8,6 @@ import lombok.Getter;
 public class CollectionTrainerDto {
 	private String parkName;
 	private String trainerName;
-	private Integer level;
-	private Integer experience;
 	private Integer totalSpecies;
 	private Integer collectedSpecies;
 }

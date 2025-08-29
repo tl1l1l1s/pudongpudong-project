@@ -67,17 +67,13 @@ public class CollectionQueryServiceImpl implements CollectionQueryService{
 		List<Species> userCollectedSpecies = findUserCollectedSpeciesByUserIdAndParkId(userId, parkId);
 
 		List<TrainerStampDto> stamps = buildTrainerStamps(trainerSpecies);
-		Integer toNextLevel = 100;
-
+		
 		log.info("트레이너 상세 조회: userId={}, trainerId={}, trainerName={}, collectedStamps={}, totalStamps={}",
 				userId, trainerId, trainerName, userCollectedSpecies.size(), trainerSpecies.size());
 
 		return TrainerDetailResponseDto.builder()
 				.trainerName(trainerName)
 				.description(trainer.getDescription())
-				.level(userTrainer.getLevel())
-				.experience(userTrainer.getExperience())
-				.toNextLevel(toNextLevel)
 				.comment("")
 				.stamps(stamps)
 				.collectedStamps(userCollectedSpecies.size())
@@ -127,8 +123,6 @@ public class CollectionQueryServiceImpl implements CollectionQueryService{
 			CollectionTrainerDto dto = CollectionTrainerDto.builder()
 					.parkName(parkName)
 					.trainerName(userTrainer.getTrainer().getName())
-					.level(userTrainer.getLevel())
-					.experience(userTrainer.getExperience())
 					.totalSpecies(totalSpecies)
 					.collectedSpecies(collectedSpecies)
 					.build();
