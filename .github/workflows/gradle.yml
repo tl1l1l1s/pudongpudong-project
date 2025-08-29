@@ -21,15 +21,16 @@ jobs:
         run: chmod +x gradlew
 
       - name: Create application.properties file from secret
-        env:
-          PROPERTIES_FILE: ${{ secrets.APPLICATION_PROPERTIES }}
-        run: echo "${{ env.PROPERTIES_FILE }}" > src/main/resources/application.properties
+        run: |
+          cat > src/main/resources/application.properties << EOF
+          ${{ secrets.APPLICATION_PROPERTIES }}
+          EOF
 
       - name: Build with Gradle
         run: ./gradlew build
 
       - name: Save build artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: build-jar
           path: build/libs/${{ env.JAR_FILE_NAME }}
@@ -39,7 +40,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download build artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: build-jar
 
@@ -58,8 +59,22 @@ jobs:
 
             sudo pkill -f $JAR_NAME
 
-            mv $GITHUB_WORKSPACE/build-jar/$JAR_NAME .
+            mv $GITHUB_WORKSPACE/$JAR_NAME .
 
             nohup java -jar $JAR_NAME > /dev/null 2>&1 &
 
-            echo "Deployment finished."
+      - name: health checking
+        run: |
+          sleep 60
+          HEALTH_CHECK_URL="http://${{ secrets.EC2_IP }}:8080/actuator/health"
+          
+          while true; do
+            RESPONSE=$(curl -s -o /dev/null -w "%{http_code}" $HEALTH_CHECK_URL)
+            if [ "$RESPONSE" == "200" ]; then
+              echo "Health check successful!"
+              break
+            else
+              echo "Health check failed with status code $RESPONSE. Retrying in 10s..."
+              sleep 10
+            fi
+          done
