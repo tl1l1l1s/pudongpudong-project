@@ -22,7 +22,26 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final UsersRepository usersRepository;
-
+	
+	private static final String[] WHITELIST_URLS = {
+			"/api/auth/**",
+			"/api/health/**",
+			"/swagger-ui/**",
+			"/v3/api-docs/**",
+			"/swagger-resources/**"
+	};
+	
+	@Override
+	protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+		String path = request.getRequestURI();
+		for (String url : WHITELIST_URLS) {
+			if (path.startsWith(url)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String bearerToken = request.getHeader("Authorization");
