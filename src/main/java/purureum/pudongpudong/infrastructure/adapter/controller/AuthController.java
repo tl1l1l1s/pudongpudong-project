@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import io.swagger.v3.oas.annotations.Parameter;
 import org.springframework.web.bind.annotation.*;
 import purureum.pudongpudong.application.service.AuthService;
 import purureum.pudongpudong.global.apiPayload.ApiResponse;
@@ -27,5 +28,15 @@ public class AuthController {
 	@PostMapping("/signup")
 	public ApiResponse<AuthResponseDto> signUp(@Valid @RequestBody AuthRequestDto request) {
 		return ApiResponse.onSuccess(authService.signUp(request));
+	}
+
+	@Operation(
+			summary = "로그아웃",
+			description = "사용자의 현재 토큰을 무효화 처리합니다."
+	)
+	@PostMapping("/logout")
+	public ApiResponse<Void> logout(@Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader) {
+		authService.logout(authorizationHeader);
+		return ApiResponse.onSuccess(null);
 	}
 }
