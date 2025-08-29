@@ -13,13 +13,10 @@ import purureum.pudongpudong.infrastructure.dto.RunningDataDto;
 import purureum.pudongpudong.infrastructure.dto.RunningResponseDto;
 import purureum.pudongpudong.infrastructure.dto.RunningStatisticsDto;
 
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 @Slf4j
 @Service
@@ -32,31 +29,14 @@ public class RunningQueryServiceImpl implements RunningQueryService{
 	
 	@Override
 	public RunningResponseDto getRunningCalendar(Long userId, int year, int month) {
-		YearMonth yearMonth = YearMonth.of(year, month);
 		List<Sessions> sessions = sessionsRepository.findByUserIdAndYearMonth(userId, year, month);
 		
 		RunningStatisticsDto statistics = buildStatistics(sessions);
 		List<RunningDataDto> data = buildRunningData(sessions);
 		
-		Map<Integer, RunningDataDto> dataMap = data.stream()
-				.collect(Collectors.toMap(RunningDataDto::getDate, Function.identity()));
-
-		List<RunningDataDto> result = IntStream.rangeClosed(1, yearMonth.lengthOfMonth())
-				.mapToObj(day -> dataMap.getOrDefault(day, RunningDataDto.builder()
-						.date(day)
-						.duration(0)
-						.distance(0.0)
-						.pace(0.0)
-						.calories(0.0)
-						.location("")
-						.mood("")
-						.stamps(new ArrayList<>())
-						.build()))
-				.collect(Collectors.toList());
-		
 		return RunningResponseDto.builder()
 				.statistics(statistics)
-				.data(result)
+				.data(data)
 				.build();
 	}
 	
