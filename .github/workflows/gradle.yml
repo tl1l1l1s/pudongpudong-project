@@ -86,7 +86,7 @@ jobs:
             sudo docker run --name $NEW_CONTAINER_NAME -d -p 8080:8080 -e TZ=Asia/Seoul --network pudongpudong ${{ env.DOCKER_IMAGE_NAME }}
 
             echo "Checking health..."
-            HEALTH_CHECK_URL="http://127.0.0.1:8080/health"
+            HEALTH_CHECK_URL="http://127.0.0.1:8080/api/health"
             for i in {1..30}; do
               STATUS=$(curl -s -o /dev/null -w "%{http_code}" $HEALTH_CHECK_URL)
               if [ "$STATUS" == "200" ]; then
