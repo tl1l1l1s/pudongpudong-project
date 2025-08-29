@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import purureum.pudongpudong.application.service.query.RunningQueryService;
 import purureum.pudongpudong.application.service.command.RunningCommandService;
+import purureum.pudongpudong.application.service.VoiceAssistantService;
 import purureum.pudongpudong.global.apiPayload.ApiResponse;
 import purureum.pudongpudong.global.util.AuthUtil;
 import purureum.pudongpudong.infrastructure.dto.*;
@@ -22,6 +23,7 @@ public class RunningController {
 	
 	private final RunningQueryService runningQueryService;
 	private final RunningCommandService runningCommandService;
+	private final VoiceAssistantService voiceAssistantService;
 	private final AuthUtil authUtil;
 	
 	@Operation(
@@ -45,5 +47,18 @@ public class RunningController {
 			@Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader,
 			@Valid @RequestBody SessionCompleteRequestDto request) {
 		return ApiResponse.onSuccess(runningCommandService.completeSession(authUtil.extractUserIdFromHeader(authorizationHeader), request));
+	}
+	
+	@Operation(
+			summary = "음성 보조",
+			description = "음성 질의를 처리하여 답변을 생성합니다."
+	)
+	@PostMapping("/voice-assistant")
+	public ApiResponse<VoiceResponseDto> processVoiceQuery(@Valid @RequestBody VoiceRequestDto request) {
+		return ApiResponse.onSuccess(
+			voiceAssistantService.processVoiceQuery(request)
+				.map(VoiceResponseDto::new)
+				.block()
+		);
 	}
 }
