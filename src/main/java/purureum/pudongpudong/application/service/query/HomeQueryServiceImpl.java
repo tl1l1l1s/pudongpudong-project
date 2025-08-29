@@ -72,6 +72,7 @@ public class HomeQueryServiceImpl implements HomeQueryService {
                 .map(stamp -> RecentActivityDto.builder()
                         .stamp(stamp.getSpecies().getName())
                         .parkName(stamp.getSession().getPark().getPlaceName())
+						.parkEmoji(stamp.getSession().getPark().getEmoji())
                         .visitedAt(stamp.getCreatedAt().format(formatter))
                         .duration(stamp.getSession().getDuration())
                         .distance(stamp.getSession().getDistance())

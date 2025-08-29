@@ -13,5 +13,5 @@ public class RunningDataDto {
 	private Double calories;
 	private String location;
 	private String mood;
-	private java.util.List<String> stamps;
+	private java.util.List<StampDto> stamps;
 }

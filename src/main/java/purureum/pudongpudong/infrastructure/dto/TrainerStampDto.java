@@ -11,4 +11,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TrainerStampDto {
 	private String speciesName;
+	private String emoji;
+	private boolean isCollected;
 }

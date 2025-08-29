@@ -7,7 +7,9 @@ import lombok.Getter;
 @Builder
 public class CollectionTrainerDto {
 	private String parkName;
+	private Long trainerId;
 	private String trainerName;
-	private Integer totalSpecies;
 	private Integer collectedSpecies;
+	private Integer totalSpecies;
+	private Double completionPercentage;
 }

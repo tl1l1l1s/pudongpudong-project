@@ -9,6 +9,7 @@ import purureum.pudongpudong.domain.model.UserStamps;
 import purureum.pudongpudong.domain.repository.SessionsRepository;
 import purureum.pudongpudong.domain.repository.UserStampsRepository;
 import purureum.pudongpudong.global.util.MathUtil;
+import purureum.pudongpudong.infrastructure.dto.StampDto;
 import purureum.pudongpudong.infrastructure.dto.RunningDataDto;
 import purureum.pudongpudong.infrastructure.dto.RunningResponseDto;
 import purureum.pudongpudong.infrastructure.dto.RunningStatisticsDto;
@@ -72,8 +73,11 @@ public class RunningQueryServiceImpl implements RunningQueryService{
 			double pace = MathUtil.calculatePace(session.getDuration(), session.getDistance());
 			
 			List<UserStamps> stamps = userStampsRepository.findBySessionId(session.getId());
-			List<String> stampNames = stamps.stream()
-					.map(stamp -> stamp.getSpecies().getName())
+			List<StampDto> stampDetails = stamps.stream()
+					.map(stamp -> StampDto.builder()
+							.name(stamp.getSpecies().getName())
+							.emoji(stamp.getSpecies().getEmoji())
+							.build())
 					.collect(Collectors.toList());
 			
 			RunningDataDto dto = RunningDataDto.builder()
@@ -84,7 +88,7 @@ public class RunningQueryServiceImpl implements RunningQueryService{
 					.calories(session.getCaloriesBurned() != null ? session.getCaloriesBurned() : 0.0)
 					.location(session.getPark() != null ? session.getPark().getPlaceName() : "")
 					.mood(session.getMood() != null ? session.getMood().name().toLowerCase() : "")
-					.stamps(stampNames)
+					.stamps(stampDetails)
 					.build();
 			
 			data.add(dto);

@@ -12,9 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrainerDetailResponseDto {
+	private Long trainerId;
 	private String trainerName;
 	private String description;
-	private String comment;
 	private List<TrainerStampDto> stamps;
 	private Integer collectedStamps;
 	private Integer totalStamps;

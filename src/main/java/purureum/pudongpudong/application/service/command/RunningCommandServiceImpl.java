@@ -14,7 +14,9 @@ import purureum.pudongpudong.global.apiPayload.exception.handler.ApiHandler;
 import purureum.pudongpudong.global.util.MathUtil;
 import purureum.pudongpudong.infrastructure.dto.SessionCompleteRequestDto;
 import purureum.pudongpudong.infrastructure.dto.SessionCompleteResponseDto;
+import purureum.pudongpudong.infrastructure.dto.StampDto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -42,8 +44,6 @@ public class RunningCommandServiceImpl implements RunningCommandService {
 		user.getUserStatistics().updateRunStatistics(request.getDistance(), request.getCalories());
 		usersRepository.save(user);
 		
-		List<String> stampNames = assignRandomStamps(session);
-
 		double pace = MathUtil.calculatePace(request.getDuration(), request.getDistance());
 		
 		log.info("러닝 완료: userId={}, duration={}, distance={}, parkName={}",
@@ -57,7 +57,7 @@ public class RunningCommandServiceImpl implements RunningCommandService {
 				.pace(pace)
 				.calories(request.getCalories())
 				.mood(request.getMood().name().toLowerCase())
-				.stamps(stampNames)
+				.stamps(assignRandomStamps(session))
 				.build();
 	}
 	
@@ -73,7 +73,7 @@ public class RunningCommandServiceImpl implements RunningCommandService {
 		return sessionsRepository.save(session);
 	}
 	
-	private List<String> assignRandomStamps(Sessions session) {
+	private List<StampDto> assignRandomStamps(Sessions session) {
 		List<Species> availableSpecies = userStampsRepository.findSpeciesByParkName(
 				session.getPark().getPlaceName());
 		
@@ -82,13 +82,21 @@ public class RunningCommandServiceImpl implements RunningCommandService {
 			return new ArrayList<>();
 		}
 		
-		Species selectedSpecies = selectRandomSpecies(availableSpecies);
-		createUserStamp(session, selectedSpecies);
+		Species selectedSpecies = availableSpecies.get(random.nextInt(availableSpecies.size()));
+		userStampsRepository.save(UserStamps.builder()
+				.user(session.getUser())
+				.species(selectedSpecies)
+				.session(session)
+				.collectedAt(LocalDateTime.now())
+				.build());
 		
 		log.info("랜덤 스탬프 할당: userId={}, sessionId={}, species={}",
 				session.getUser().getId(), session.getId(), selectedSpecies.getName());
 		
-		return List.of(selectedSpecies.getName());
+		return List.of(StampDto.builder()
+						.name(selectedSpecies.getName())
+						.emoji(selectedSpecies.getEmoji())
+				.build());
 	}
 	
 	private void validateSessionRequest(SessionCompleteRequestDto request) {
@@ -117,18 +125,5 @@ public class RunningCommandServiceImpl implements RunningCommandService {
 	private Parks findParkByName(String parkName) {
 		return parksRepository.findByPlaceName(parkName)
 				.orElseThrow(() -> new ApiHandler(ErrorStatus.PARK_NOT_FOUND));
-	}
-	
-	private Species selectRandomSpecies(List<Species> availableSpecies) {
-		return availableSpecies.get(random.nextInt(availableSpecies.size()));
-	}
-	
-	private void createUserStamp(Sessions session, Species species) {
-		UserStamps userStamp = UserStamps.builder()
-				.user(session.getUser())
-				.species(species)
-				.session(session)
-				.build();
-		userStampsRepository.save(userStamp);
 	}
 }

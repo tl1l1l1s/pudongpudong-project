@@ -15,5 +15,5 @@ public class SessionCompleteResponseDto {
 	private Double pace;
 	private Double calories;
 	private String mood;
-	private List<String> stamps;
+	private List<StampDto> stamps;
 }

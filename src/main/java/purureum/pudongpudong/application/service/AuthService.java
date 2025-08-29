@@ -5,8 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import purureum.pudongpudong.domain.model.JwtDenylist;
+import purureum.pudongpudong.domain.model.UserStatistics;
 import purureum.pudongpudong.domain.model.Users;
 import purureum.pudongpudong.domain.repository.JwtDenylistRepository;
+import purureum.pudongpudong.domain.repository.UserStatisticsRepository;
 import purureum.pudongpudong.domain.repository.UsersRepository;
 import purureum.pudongpudong.global.util.JwtUtil;
 import purureum.pudongpudong.infrastructure.dto.AuthRequestDto;
@@ -24,6 +26,7 @@ import java.util.Date;
 public class AuthService {
 	
 	private final UsersRepository usersRepository;
+	private final UserStatisticsRepository userStatisticsRepository;
 	private final JwtDenylistRepository jwtDenylistRepository;
 	private final JwtUtil jwtUtil;
 	
@@ -51,6 +54,7 @@ public class AuthService {
 					.provider(request.getProvider())
 					.build();
 			user = usersRepository.save(user);
+			userStatisticsRepository.save(UserStatistics.createInitial(user));
 			isNewUser = true;
 			log.info("신규 사용자 생성: providerId={}, provider={}", request.getProviderId(), request.getProvider());
 		} else {
