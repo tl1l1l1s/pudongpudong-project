@@ -63,6 +63,12 @@ jobs:
           port: 22
           key: ${{ env.PRIVATE_KEY }}
           script: |
+            # 네트워크가 존재하지 않으면 생성
+            if ! sudo docker network ls | grep -q pudongpudong; then
+              echo "Creating Docker network 'pudongpudong'..."
+              sudo docker network create pudongpudong
+            fi
+
             TIMESTAMP=$(date +"%Y%m%d%H%M%S")
             NEW_CONTAINER_NAME="${{ env.CONTAINER_NAME }}-$TIMESTAMP"
 
@@ -70,44 +76,4 @@ jobs:
             CONTAINER_ID=$(sudo docker ps -q --filter "publish=8080")
             if [ ! -z "$CONTAINER_ID" ]; then
               echo "Stopping container $CONTAINER_ID"
-              sudo docker stop $CONTAINER_ID
-            fi
-
-            echo "Pulling image..."
-            sudo docker pull ${{ env.DOCKER_IMAGE_NAME }}
-
-            echo "Running new container $NEW_CONTAINER_NAME"
-            sudo docker run --name $NEW_CONTAINER_NAME -d -p 8080:8080 -e TZ=Asia/Seoul --network jajaja ${{ env.DOCKER_IMAGE_NAME }}
-
-            echo "Checking health..."
-            HEALTH_CHECK_URL="http://127.0.0.1:8080/health"
-            for i in {1..30}; do
-              STATUS=$(curl -s -o /dev/null -w "%{http_code}" $HEALTH_CHECK_URL)
-              if [ "$STATUS" == "200" ]; then
-                echo "✅ Healthy!"
-                if [ ! -z "$CONTAINER_ID" ]; then
-                  echo "Removing old container: $CONTAINER_ID"
-                  sudo docker rm $CONTAINER_ID
-                fi
-                OLD_IMAGE=$(sudo docker images -q ${{ env.DOCKER_IMAGE_NAME }})
-                if [ ! -z "$OLD_IMAGE" ]; then
-                  sudo docker rmi $OLD_IMAGE
-                fi
-                exit 0
-              fi
-              echo "⏳ Waiting... ($i/30)"
-              sleep 10
-            done
-
-            echo "❌ Health check failed."
-            sudo docker stop $NEW_CONTAINER_NAME
-            sudo docker rm $NEW_CONTAINER_NAME
-            if [ ! -z "$CONTAINER_ID" ]; then
-              echo "Restarting old container..."
-              sudo docker start $CONTAINER_ID
-            fi
-            LATEST_IMAGE_ID=$(sudo docker images ${{ env.DOCKER_IMAGE_NAME }}:latest -q)
-            if [ ! -z "$LATEST_IMAGE_ID" ]; then
-              sudo docker rmi $LATEST_IMAGE_ID
-            fi
-            exit 1
+              sudo docker stop $CONTAIN
