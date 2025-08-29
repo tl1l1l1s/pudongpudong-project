@@ -19,8 +19,25 @@ public enum ErrorStatus implements BaseErrorCode {
     // 사용자 관련 응답
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "USER4001", "사용자를 찾을 수 없습니다."),
     
+    // 인증 관련 응답
+    INVALID_AUTH_DATA(HttpStatus.BAD_REQUEST, "AUTH4001", "잘못된 인증 데이터입니다."),
+    TOKEN_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "AUTH5001", "토큰 생성에 실패했습니다."),
+    
     // 공원 관련 응답
     PARK_NOT_FOUND(HttpStatus.NOT_FOUND, "PARK4001", "공원을 찾을 수 없습니다."),
+    
+    // 트레이너 관련 응답
+    TRAINER_NOT_FOUND(HttpStatus.NOT_FOUND, "TRAINER4001", "트레이너를 찾을 수 없습니다."),
+    USER_TRAINER_NOT_FOUND(HttpStatus.NOT_FOUND, "TRAINER4002", "사용자의 트레이너 정보를 찾을 수 없습니다."),
+    TRAINER_PARK_NOT_ASSIGNED(HttpStatus.BAD_REQUEST, "TRAINER4003", "트레이너에 공원이 할당되지 않았습니다."),
+    
+    // 러닝 세션 관련 응답
+    SESSION_NOT_FOUND(HttpStatus.NOT_FOUND, "SESSION4001", "러닝 세션을 찾을 수 없습니다."),
+    INVALID_SESSION_DATA(HttpStatus.BAD_REQUEST, "SESSION4002", "잘못된 세션 데이터입니다."),
+    
+    // 스탬프/수목 관련 응답
+    SPECIES_NOT_FOUND(HttpStatus.NOT_FOUND, "SPECIES4001", "수목 정보를 찾을 수 없습니다."),
+    NO_SPECIES_IN_PARK(HttpStatus.NOT_FOUND, "SPECIES4002", "해당 공원에 등록된 수목이 없습니다."),
     
     // 외부 API 관련 응답
     KAKAO_MAP_API_BAD_REQUEST(HttpStatus.INTERNAL_SERVER_ERROR, "KAKAO4001", "카카오 맵 API 호출을 잘못된 요청으로 인해 실패했습니다."),

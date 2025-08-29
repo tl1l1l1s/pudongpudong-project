@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import purureum.pudongpudong.application.command.ParkCommandService;
+import purureum.pudongpudong.application.service.command.ParkCommandService;
 
 @Slf4j
 @Component

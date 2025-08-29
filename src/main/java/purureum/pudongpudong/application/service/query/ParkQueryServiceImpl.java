@@ -1,4 +1,4 @@
-package purureum.pudongpudong.application.query;
+package purureum.pudongpudong.application.service.query;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -4,7 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import purureum.pudongpudong.application.query.ParkQueryService;
+import purureum.pudongpudong.application.service.query.ParkQueryService;
 import purureum.pudongpudong.global.apiPayload.ApiResponse;
 import purureum.pudongpudong.infrastructure.dto.ParkResponseDto;
 import reactor.core.publisher.Mono;

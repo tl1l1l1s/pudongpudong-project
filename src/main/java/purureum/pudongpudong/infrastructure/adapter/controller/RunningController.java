@@ -7,7 +7,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-import purureum.pudongpudong.application.service.RunningService;
+import purureum.pudongpudong.application.service.query.RunningQueryService;
+import purureum.pudongpudong.application.service.command.RunningCommandService;
 import purureum.pudongpudong.global.apiPayload.ApiResponse;
 import purureum.pudongpudong.global.util.AuthUtil;
 import purureum.pudongpudong.infrastructure.dto.*;
@@ -19,7 +20,8 @@ import purureum.pudongpudong.infrastructure.dto.*;
 @Tag(name = "Running API", description = "러닝 기록 관련 API")
 public class RunningController {
 	
-	private final RunningService runningService;
+	private final RunningQueryService runningQueryService;
+	private final RunningCommandService runningCommandService;
 	private final AuthUtil authUtil;
 	
 	@Operation(
@@ -31,7 +33,7 @@ public class RunningController {
 			@Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader,
 			@RequestParam int year,
 			@RequestParam int month) {
-		return ApiResponse.onSuccess(runningService.getRunningCalendar(authUtil.extractUserIdFromHeader(authorizationHeader), year, month));
+		return ApiResponse.onSuccess(runningQueryService.getRunningCalendar(authUtil.extractUserIdFromHeader(authorizationHeader), year, month));
 	}
 	
 	@Operation(
@@ -42,6 +44,6 @@ public class RunningController {
 	public ApiResponse<SessionCompleteResponseDto> completeSession(
 			@Parameter(hidden = true) @RequestHeader("Authorization") String authorizationHeader,
 			@Valid @RequestBody SessionCompleteRequestDto request) {
-		return ApiResponse.onSuccess(runningService.completeSession(authUtil.extractUserIdFromHeader(authorizationHeader), request));
+		return ApiResponse.onSuccess(runningCommandService.completeSession(authUtil.extractUserIdFromHeader(authorizationHeader), request));
 	}
 }

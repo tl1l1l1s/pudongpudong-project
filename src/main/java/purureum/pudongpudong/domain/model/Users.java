@@ -31,4 +31,8 @@ public class Users extends BaseEntity {
 	
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Sessions> sessions = new ArrayList<>();
+	
+	public void updateRunningStatistics(Double distance, Double calories) {
+	
+	}
 }
