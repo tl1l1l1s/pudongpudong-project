@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import purureum.pudongpudong.domain.model.JwtDenylist;
 import purureum.pudongpudong.domain.model.Users;
+import purureum.pudongpudong.domain.repository.JwtDenylistRepository;
 import purureum.pudongpudong.domain.repository.UsersRepository;
 import purureum.pudongpudong.global.util.JwtUtil;
 import purureum.pudongpudong.infrastructure.dto.AuthRequestDto;
@@ -12,12 +14,17 @@ import purureum.pudongpudong.infrastructure.dto.AuthResponseDto;
 import purureum.pudongpudong.global.apiPayload.code.status.ErrorStatus;
 import purureum.pudongpudong.global.apiPayload.exception.handler.ApiHandler;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 	
 	private final UsersRepository usersRepository;
+	private final JwtDenylistRepository jwtDenylistRepository;
 	private final JwtUtil jwtUtil;
 	
 	@Transactional
@@ -69,5 +76,25 @@ public class AuthService {
 			log.error("JWT 토큰 생성 실패: userId={}", userId, e);
 			throw new ApiHandler(ErrorStatus.TOKEN_GENERATION_FAILED);
 		}
+	}
+
+	@Transactional
+	public void logout(String bearerToken) {
+		if (bearerToken == null || !bearerToken.startsWith("Bearer ")) {
+			throw new ApiHandler(ErrorStatus.INVALID_TOKEN_FORMAT);
+		}
+		String token = bearerToken.substring(7);
+
+		String signature = jwtUtil.getSignatureFromToken(token);
+		Date expirationDate = jwtUtil.getExpirationDateFromToken(token);
+		LocalDateTime expiresAt = expirationDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+
+		JwtDenylist denylistedToken = JwtDenylist.builder()
+				.signature(signature)
+				.expiresAt(expiresAt)
+				.build();
+
+		jwtDenylistRepository.save(denylistedToken);
+		log.info("토큰 무효화 완료: signature={}", signature);
 	}
 }

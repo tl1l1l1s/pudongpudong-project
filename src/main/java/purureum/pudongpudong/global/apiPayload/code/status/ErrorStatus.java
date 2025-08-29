@@ -22,6 +22,9 @@ public enum ErrorStatus implements BaseErrorCode {
     // 인증 관련 응답
     INVALID_AUTH_DATA(HttpStatus.BAD_REQUEST, "AUTH4001", "잘못된 인증 데이터입니다."),
     TOKEN_GENERATION_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "AUTH5001", "토큰 생성에 실패했습니다."),
+	INVALID_TOKEN_FORMAT(HttpStatus.INTERNAL_SERVER_ERROR, "AUTH4002", "잘못된 토큰 형식입니다."),
+	INVALID_TOKEN_SIGNATURE(HttpStatus.INTERNAL_SERVER_ERROR, "AUTH4003", "잘못된 토큰 시그니처입니다."),
+	TOKEN_INVALIDATED(HttpStatus.INTERNAL_SERVER_ERROR, "AUTH4004", "이미 무효화된 토큰입니다."),
     
     // 공원 관련 응답
     PARK_NOT_FOUND(HttpStatus.NOT_FOUND, "PARK4001", "공원을 찾을 수 없습니다."),
