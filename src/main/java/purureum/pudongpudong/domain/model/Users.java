@@ -29,6 +29,7 @@ public class Users extends BaseEntity {
 	@OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
 	private UserStatistics userStatistics;
 	
+	@Builder.Default
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Sessions> sessions = new ArrayList<>();
 	
