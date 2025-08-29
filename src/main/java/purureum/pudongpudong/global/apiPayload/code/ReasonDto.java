@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @Builder
-public class ReasonDTO {
+public class ReasonDto {
 
     private HttpStatus httpStatus;
 

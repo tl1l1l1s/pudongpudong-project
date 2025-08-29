@@ -2,8 +2,8 @@ package purureum.pudongpudong.global.apiPayload.code;
 
 public interface BaseErrorCode {
 
-    ErrorReasonDTO getReason();
+    ErrorReasonDto getReason();
 
-    ErrorReasonDTO getReasonHttpStatus();
+    ErrorReasonDto getReasonHttpStatus();
 
 }
