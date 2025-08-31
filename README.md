@@ -106,6 +106,3 @@ AI 트레이너와 함께하는 러닝 도움 헬스케어 애플리케이션
 | 이름                                                                                                                                               | 역할      | 담당 기능                          |
 |--------------------------------------------------------------------------------------------------------------------------------------------------|-------------|------------------------------------|
 | [<img src="https://avatars.githubusercontent.com/u/96182623?v=4" height=130 width=130> <br/> @tl1l1l1s](https://github.com/tl1l1l1s) **신윤지**     | 백엔드 및 프론트엔드  | 백엔드 전체, 프론트엔드 캘린더/컬렉션 화면 API 연동, 러닝 중 음성 인식 및 음성 합성 기능 전체|
-| [<img src="https://avatars.githubusercontent.com/u/163801908?v=4" height=130 width=130> <br/> @gaeunee2](https://github.com/gaeunee2) **김가은**     | 팀장, 프론트엔드  | 기획, 디자인 및 프론트엔드|
-| [<img src="https://avatars.githubusercontent.com/u/156641278?v=4" height=130 width=130> <br/> @lucy7noh](https://github.com/lucy7noh) **노윤선**     | 프론트엔드  | 기획, 디자인 및 프론트엔드|
-
